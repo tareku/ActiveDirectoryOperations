@@ -14,6 +14,7 @@ namespace ActiveDirectoryOperations
         static void Main(string[] args)
         {
             UserAccountByUsername("username");
+            UsersAccounts();
         }
 
         private static void UserAccountByUsername(string username)
@@ -35,6 +36,26 @@ namespace ActiveDirectoryOperations
             catch (InvalidEnumArgumentException) { throw; }
             catch (ArgumentException) { throw; }
             catch (MultipleMatchesException) { throw; }
+        }
+
+        private static void UsersAccounts()
+        {
+            try
+            {
+                Stopwatch stopWatch = new Stopwatch();
+                stopWatch.Start();
+
+                PrincipalContext principalContext = new PrincipalContext(ContextType.Domain, "mydomain.com");
+                PrincipalSearcher principalSearcher = new PrincipalSearcher(new UserPrincipal(principalContext));
+                PrincipalSearchResult<Principal> users = principalSearcher.FindAll();
+
+                stopWatch.Stop();
+                TimeSpan ts = stopWatch.Elapsed;
+                string elapsedTime = string.Format("{0:00}:{1:00}:{2:00}.{3:00}", ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds / 10);
+                Console.WriteLine($"{users.Count()} users accounts, run for {elapsedTime}");
+            }
+            catch (ArgumentException) { throw; }
+            catch (InvalidOperationException) { throw; }
         }
     }
 }
