@@ -16,6 +16,7 @@ namespace ActiveDirectoryOperations
             UserAccountByUsername("username");
             UsersAccounts();
             GroupsAccounts();
+            ComputersAccounts();
         }
 
         private static void UserAccountByUsername(string username)
@@ -74,6 +75,26 @@ namespace ActiveDirectoryOperations
                 TimeSpan ts = stopWatch.Elapsed;
                 string elapsedTime = string.Format("{0:00}:{1:00}:{2:00}.{3:00}", ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds / 10);
                 Console.WriteLine($"{groups.Count()} groups, run for {elapsedTime}");
+            }
+            catch (ArgumentException) { throw; }
+            catch (InvalidOperationException) { throw; }
+        }
+
+        private static void ComputersAccounts()
+        {
+            try
+            {
+                Stopwatch stopWatch = new Stopwatch();
+                stopWatch.Start();
+
+                PrincipalContext principalContext = new PrincipalContext(ContextType.Domain, "mydomain.com");
+                PrincipalSearcher principalSearcher = new PrincipalSearcher(new ComputerPrincipal(principalContext));
+                PrincipalSearchResult<Principal> computers = principalSearcher.FindAll();
+
+                stopWatch.Stop();
+                TimeSpan ts = stopWatch.Elapsed;
+                string elapsedTime = string.Format("{0:00}:{1:00}:{2:00}.{3:00}", ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds / 10);
+                Console.WriteLine($"{computers.Count()} computers, run for {elapsedTime}");
             }
             catch (ArgumentException) { throw; }
             catch (InvalidOperationException) { throw; }
