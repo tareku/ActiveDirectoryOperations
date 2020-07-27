@@ -15,7 +15,7 @@ namespace ActiveDirectoryOperations
         {
             UserAccountByUsername("username");
             UsersAccounts();
-            GroupsAccounts
+            GroupsAccounts();
         }
 
         private static void UserAccountByUsername(string username)
